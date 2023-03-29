@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block nav_buttons %}
+    {% if current_user.is_authenticated %}
+        <a href="/logout" class="btn btn-primary" type="submit">Выход</a>
+    {% else %}
+        <a href="/reg" class="btn btn-light" type="submit">Регистрация</a>
+        <a href="/login" class="btn btn-primary" type="submit">Авторизация</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="content 1border">
+    <div class="1border pt-3">
+      <p class="text-center h5 text-uppercase"><b>Аренда коммерческой недвижимости в Москве</b></p>
+    </div>
+
+    <div class="1border">
+
+      <div class="row 1border">
+
+        <div class="col-4 1border">
+          <div class="card">
+
+                <div class="card_pic">
+                <img src="static/img/obj_pic.png" class="card-img-top" alt="...">
+              </div>
+
+            </div>
+        </div>
+        <div class="col-8 1border p-0">
+          <div class="card-header ">
+              Адрес офиса
+          </div>
+          <div class="card-body">
+                <h5 class="card-title">Название бизнес-центра</h5>
+                <p class="card-text">Краткая информация об офисе.</p>
+            <ul class="list-group-item d-flex justify-content-between align-items-center">
+              <li class="list-group-item"><b>Площадь, м2: </b>100</li>
+              <li class="list-group-item"><b>Этаж: </b>1</li>
+              <li class="list-group-item"><b>Ставка, в год руб/м2: </b>10000</li>
+            </ul>
+                <a href="#" class="btn btn-secondary">Подробнее</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pagination d-flex">
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item m-1"><a class="page-link" href="#">Предыдущая</a></li>
+          <li class="page-item m-1"><a class="page-link" href="#">Следующая</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+{% endblock %}

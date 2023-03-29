@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="content border">
+    <form class="row g-3">
+      <div class="border pt-3">
+        <p class="text-center h5 text-uppercase"><b>Авторизация</b></p>
+      </div>
+
+      <div class="mb-3 row">
+          <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control-plaintext p-2" id="staticEmail" placeholder="ваш email" value="">
+          </div>
+       </div>
+
+       <div class="mb-3 row">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Пароль</label>
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword" placeholder="введите пароль">
+          </div>
+       </div>
+
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Войти</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

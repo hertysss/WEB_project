@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <link rel="stylesheet" href="static/css/style.css">
+  <title>Проект №3</title>
+</head>
+<body>
+
+    <div class="container 1border">
+        <div class="header 1border d-flex fixed-top" style="background-color: #e3f2fd;">
+
+            <div class="logo flex-grow-1 m-2">
+                <a class="navbar-brand 1border" href="/">
+                    <img src="static/img/logo.svg" width="40" height="40" class="d-inline-block align-bottom" alt="" loading="lazy">
+                    <span class="navbar-text h4 text-uppercase">Агентство коммерческой недвижимости</span>
+                </a>
+            </div>
+
+            <div class="RA 1border m-2">
+                {% block nav_buttons %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>
