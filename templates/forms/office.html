@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="wrapper m-5">
+	<div class="title p-3">
+		<p class="text-center h5 text-uppercase"><b>{{ title }}</b></p>
+	</div>
+
+	<form action="" method="post">
+	    {{ form.hidden_tag() }}
+	    <p>
+	        {{ form.area.label }}<br>
+	        {{ form.area(class="form-control") }}<br>
+	        {% for error in form.area.errors %}
+	            <p class="alert alert-danger" role="alert">
+	                {{ error }}
+	            </p>
+	        {% endfor %}
+	    </p>
+		<p>
+	        {{ form.floor.label }}<br>
+	        {{ form.floor(class="form-control") }}<br>
+	        {% for error in form.floor.errors %}
+	            <p content="alert alert-danger" role="alert">
+	                {{ error }}
+	            </p>
+	        {% endfor %}
+	    </p>
+		<p>
+	        {{ form.bet.label }}<br>
+	        {{ form.bet(class="form-control") }}<br>
+	        {% for error in form.bet.errors %}
+	            <p content="alert alert-danger" role="alert">
+	                {{ error }}
+	            </p>
+	        {% endfor %}
+	    </p>    
+		<p>
+	        {{ form.status.label }}<br>
+	        {{ form.status(class="form-control") }}<br>
+	        {% for error in form.status.errors %}
+	            <p content="alert alert-danger" role="alert">
+	                {{ error }}
+	            </p>
+	        {% endfor %}
+	    </p>   
+	    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+	    {{message}}
+	</form>
+</div>
+
+{% endblock %}

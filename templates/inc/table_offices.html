@@ -1,0 +1,35 @@
+{% if business_center.offices|length == 0 %}
+
+	<div class="alert alert-info" role="alert">
+		Свободных площадей нет
+	</div>
+
+{% else %}
+	<table class="table table-striped table-hover table-sm">
+		<thead>
+			<tr class="table-info">
+				<th scope="row"></th>
+				<td colspan="2">Офисы({{ business_center.offices|length }})</td>
+				<td>Площадь, м2</td>
+				<td>Этаж</td>
+				<td>Ставка, руб за м2/год</td>				
+			</tr>
+		</thead>
+
+	{% for office in business_center.offices %}
+
+	<tbody>
+		<tr class="position-relative">
+			<th scope="row" class="position-static"><a href='/card_office/{{ office.id }}' class="stretched-link"></a></th>
+			<td colspan="2">лот№ {{ office.id }}</td>
+			<td >{{ office.area }}</td>
+			<td>{{ office.floor }}</td>
+			<td>{{ office.bet }}</td>				
+		</tr>
+	</tbody>
+
+	{% endfor %}
+
+	</table>
+
+{% endif %}

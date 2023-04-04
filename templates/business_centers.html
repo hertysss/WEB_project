@@ -1,0 +1,47 @@
+{% for business_center in business_centers %}
+
+<div class="row align-items-center border-top pb-4">
+	<div class="col-4">
+		<div class="card_pic m-0 p-2">
+			<img src="{{ url_for('static', filename='img/obj_pic.png')}}" class="card-img-top" alt="...">
+		</div>
+	</div>
+	<div class="col-8 p-0">
+		<div class="card-header ">
+			<div class="card-title h4 d-inline">
+				{{ business_center.name }}
+			</div>
+		</div>
+		<div class="address px-3">
+			{{ business_center.address }}
+		</div>	
+		<div class="card-body border-0">
+
+			<ul class="list-group-item border-1 mt-2">
+				<li class="list-group-item border-0"><b>Округ: </b>{{ business_center.district }}</li>
+				<li class="list-group-item border-0"><b>Общая площадь, м2: </b>{{ business_center.total_area }}</li>
+				<li class="list-group-item border-0"><b>Контакт арендодателя: </b>{{ business_center.contact }}</li>
+			</ul>
+			{% if (current_user.role == "менеджер") and (current_user.id == business_center.user_id) %}
+				
+				<div class="d-inline-flex justify-content-end px-3">
+					<a href="/edit_business_center/{{ business_center.id }}" class="btn btn-warning btn-sm mx-2">Редактировать</a>
+					<a href="/del_business_center/{{ business_center.id }}" class="btn btn-danger btn-sm mx-2">Удалить</a>
+				</div>
+
+			{% elif current_user.role == "брокер" %}
+
+				{% include "inc/table_offices.html" %}
+				<div class="d-inline-flex justify-content-end px-3">
+					<a href="/card_business_center/{{ business_center.id }}" class="btn btn-secondary btn-sm mx-2">Подробнее</a>
+					<a href="/add_office" class="btn btn-primary btn-sm">Добавить офис</a>
+				</div>
+
+			{% endif %}
+
+			
+		</div>
+	</div>
+</div>
+
+{% endfor %}

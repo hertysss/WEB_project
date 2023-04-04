@@ -1,5 +1,3 @@
 from . import users
-from . import landlenders
-from . import objects
+from . import business_centers
 from . import offices
-from . import renters

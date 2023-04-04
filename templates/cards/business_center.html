@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% include "inc/title.html" %}
+
+<div class="row">
+	<div class="col-4 ">
+		<div class="card_pic ">
+			<img src="{{ url_for('static', filename='img/obj_pic.png')}}" class="card-img-top" alt="...">
+		</div>
+	</div>
+	<div class="col-8 p-0">
+
+		<div class="card-body border-0">
+
+	        <h5 class="card-title">{{ business_center.name }}</h5>
+
+			<ul class="list-group-item border-0">
+				<li class="list-group-item border-0"><b>Адрес: </b>{{ business_center.address }}</li>
+				<li class="list-group-item border-0"><b>Строение: </b>{{ business_center.building }}</li>
+				<li class="list-group-item border-0"><b>Округ: </b>{{ business_center.district }}</li>
+				<li class="list-group-item border-0"><b>Метро: </b>{{ business_center.metro }}</li>
+				<li class="list-group-item border-0"><b>Общая площадь, м2: </b>{{ business_center.total_area }}</li>
+				<li class="list-group-item border-0"><b>Класс объекта: </b>{{ business_center.class }}</li>
+				<li class="list-group-item border-0"><b>Этажность: </b>{{ business_center.floors }}</li>
+				<li class="list-group-item border-0"><b>Наличие лифта: </b>{{ business_center.lift }}</li>
+				<li class="list-group-item border-0"><b>Наличие парковки: </b>{{ business_center.parking }}</li>
+				<li class="list-group-item border-0"><b>Контакт арендодателя: </b>{{ business_center.contact }}</li>
+			</ul>
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}

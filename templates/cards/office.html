@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% include "inc/title.html" %}
+
+<div class="row">
+	<div class="col-4 ">
+		<div class="card_pic ">
+			<img src="{{ url_for('static', filename='img/obj_pic.png')}}" class="card-img-top" alt="...">
+		</div>
+	</div>
+	<div class="col-8 p-0">
+
+		<div class="card-body border-0">
+
+	        <h5 class="card-title">{{ office.business_center.name }}</h5>
+
+			<ul class="list-group-item border-0">
+				<li class="list-group-item border-0"><b>Адрес: </b>{{ office.business_center.address }}</li>
+				<li class="list-group-item border-0"><b>Строение: </b>{{ office.business_center.building }}</li>
+				<li class="list-group-item border-0"><b>Округ: </b>{{ office.business_center.district }}</li>
+				<li class="list-group-item border-0"><b>Метро: </b>{{ office.business_center.metro }}</li>
+				<li class="list-group-item border-0"><b>Общая площадь, м2: </b>{{ office.business_center.total_area }}</li>
+				<li class="list-group-item border-0"><b>Класс объекта: </b>{{ office.business_center.class }}</li>
+				<li class="list-group-item border-0"><b>Этажность: </b>{{ office.business_center.floors }}</li>
+				<li class="list-group-item border-0"><b>Наличие лифта: </b>{{ office.business_center.lift }}</li>
+				<li class="list-group-item border-0"><b>Наличие парковки: </b>{{ office.business_center.parking }}</li>
+				<li class="list-group-item border-0"><b>Контакт арендодателя: </b>{{ office.business_center.contact }}</li>
+
+				<li class="list-group-item border-0"><b>Площадь офиса, в м2: </b>{{ office.area }}</li>
+				<li class="list-group-item border-0"><b>Этаж: </b>{{ office.floor }}</li>
+				<li class="list-group-item border-0"><b>Ставка аренды, в руб за м2/год: </b>{{ office.bet }}</li>
+				<li class="list-group-item border-0"><b>Статус: </b>{{ office.status }}</li>
+			</ul>
+			
+			{% if (current_user.role == "брокер") and (current_user.id == office.user_id) %}
+			<div class="d-inline-flex justify-content-end px-3">
+				<a href="/edit_office/{{ office['id'] }}" class="btn btn-warning btn-sm mx-2">Редактировать</a>
+				<a href="/del_office/{{ office['id'] }}" class="btn btn-danger btn-sm mx-2">Удалить</a>
+			</div>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+
+{% endblock %}

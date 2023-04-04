@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-end pb-3 px-3">
+
+{% if current_user.role == "менеджер" %}
+
+	<div class="add_business_center m-1">
+		<a href="/add_business_center" class="btn btn-primary btn-sm">Добавить Бизнес-центр</a>
+	</div>
+
+{% endif %}
+
+</div>
