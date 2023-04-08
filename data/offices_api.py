@@ -11,7 +11,7 @@ blueprint = flask.Blueprint(
 )
 
 
-@blueprint.route('/offices')
+@blueprint.route('/api/offices')
 def get_offices():
     session = create_session()
 
