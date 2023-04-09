@@ -1,0 +1,7 @@
+<div class="card_pic m-0 p-2">
+	{% if business_center.photo == "" %}
+		<img src="{{ url_for('static', filename='img/obj_pic.jpg')}}" class="card-img-top rounded-3" alt="default">	
+	{% else %}
+		<img src="{{ url_for('static', filename='img/' + business_center.id | string + '/' + business_center.photo )}}" class="card-img-top rounded-3" alt="фотография бизнес-центра">
+	{% endif %}
+</div>
