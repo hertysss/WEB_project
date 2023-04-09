@@ -100,15 +100,6 @@
 	        {% endfor %}
 	    </p>
 	    <p>
-	        {{ form.is_enabled.label }}<br>
-	        {{ form.is_enabled(class="form-control") }}<br>
-	        {% for error in form.is_enabled.errors %}
-	            <p content="alert alert-danger" role="alert">
-	                {{ error }}
-	            </p>
-	        {% endfor %}
-	    </p>
-	    <p>
 	        {{ form.contact.label }}<br>
 	        {{ form.contact(class="form-control") }}<br>
 	        {% for error in form.contact.errors %}

@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, request, abort
+from flask import Flask, render_template, redirect, request, abort, make_response, jsonify
 from data import db_session
+from data import offices_api
 
 from data.business_centers import Business_center
 from data.offices import Office
@@ -13,6 +14,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pupupu'
+app.config['JSON_AS_ASCII'] = False
 login_manager = LoginManager()
 login_manager.init_app(app)
 
@@ -99,9 +101,8 @@ def add_business_center():
         bc.floors = form.floors.data
         bc.lift = form.lift.data
         bc.parking = form.parking.data
-        bc.is_enabled = form.is_enabled.data
         bc.contact = form.contact.data
-        current_user.bc.append(bc)
+        current_user.business_centers.append(bc)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/')
@@ -131,7 +132,6 @@ def edit_business_center(id):
             form.floors.data = bc.floors
             form.lift.data = bc.lift
             form.parking.data = bc.parking
-            form.is_enabled.data = bc.is_enabled
             form.contact.data = bc.contact
         else:
             abort(404)
@@ -150,7 +150,6 @@ def edit_business_center(id):
             bc.floors = form.floors.data
             bc.lift = form.lift.data
             bc.parking = form.parking.data
-            bc.is_enabled = form.is_enabled.data
             db_sess.commit()
             return redirect('/')
         else:
@@ -168,8 +167,11 @@ def del_business_center(id):
     bc = db_sess.query(Business_center).filter(Business_center.id == id,
                                                Business_center.user == current_user).first()
     if bc:
-        #db_sess.delete(bc)
         print(bc)
+        ofs = db_sess.query(Office).filter(Office.business_center_id == id).all()
+        for of in ofs:
+            db_sess.delete(of)
+        db_sess.delete(bc)
         db_sess.commit()
     else:
         abort(404)
@@ -187,9 +189,9 @@ def card_business_center(id):
                            business_center=business_center)
 
 
-@app.route('/add_office',  methods=['GET', 'POST'])
+@app.route('/bc<int:bc_id>/add_office',  methods=['GET', 'POST'])
 @login_required
-def add_office():
+def add_office(bc_id):
     print(f"Запрос на cоздание офиса")
     form = OfficeForm()
     if form.validate_on_submit():
@@ -199,8 +201,9 @@ def add_office():
         of.floor = form.floor.data
         of.bet = form.bet.data
         of.status = form.status.data
+        of.business_center_id = bc_id
+        current_user.offices.append(of)
 
-        current_user.of.append(of)
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/')
@@ -252,8 +255,8 @@ def del_office(id):
     of = db_sess.query(Office).filter(Office.id == id,
                                       Office.user == current_user).first()
     if of:
-        #db_sess.delete(of)
         print(of)
+        #db_sess.delete(of)
         db_sess.commit()
     else:
         abort(404)
@@ -269,8 +272,19 @@ def card_office(id):
                            title="Характеристики офиса",
                            office=office)
 
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.errorhandler(400)
+def bad_request(_):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
+
 def main():
     db_session.global_init("db/blogs.db")
+    app.register_blueprint(offices_api.blueprint)
     app.run()
 
 

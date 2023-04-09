@@ -3,7 +3,7 @@
 <div class="row align-items-center border-top pb-4">
 	<div class="col-4">
 		<div class="card_pic m-0 p-2">
-			<img src="{{ url_for('static', filename='img/obj_pic.png')}}" class="card-img-top" alt="...">
+			<img src="{{ url_for('static', filename='img/obj_pic.png')}}" class="card-img-top rounded-3" alt="...">
 		</div>
 	</div>
 	<div class="col-8 p-0">
@@ -34,7 +34,7 @@
 				{% include "inc/table_offices.html" %}
 				<div class="d-inline-flex justify-content-end px-3">
 					<a href="/card_business_center/{{ business_center.id }}" class="btn btn-secondary btn-sm mx-2">Подробнее</a>
-					<a href="/add_office" class="btn btn-primary btn-sm">Добавить офис</a>
+					<a href="/bc{{ business_center.id }}/add_office" class="btn btn-primary btn-sm">Добавить офис</a>
 				</div>
 
 			{% endif %}

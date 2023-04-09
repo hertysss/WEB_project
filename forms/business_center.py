@@ -14,6 +14,5 @@ class Business_centerForm(FlaskForm):
     floors = StringField('Количество этажей', validators=[DataRequired()])
     lift = SelectField('Наличие лифта', choices=['да', 'нет'], validators=[DataRequired()])
     parking = SelectField('Наличие парковки', choices=['да', 'нет'], validators=[DataRequired()])
-    is_enabled = SelectField('На удаление', choices=['нет', 'да' ], validators=[DataRequired()])
     contact = StringField('Контактная информация арендодателя', validators=[DataRequired()])
     submit = SubmitField('Применить')

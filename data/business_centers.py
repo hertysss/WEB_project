@@ -1,10 +1,11 @@
 import sqlalchemy
 from sqlalchemy import orm
+from sqlalchemy_serializer import SerializerMixin
 
 from .db_session import SqlAlchemyBase
 
 
-class Business_center(SqlAlchemyBase):
+class Business_center(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'business_centers'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
@@ -18,7 +19,6 @@ class Business_center(SqlAlchemyBase):
     floors = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     lift = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     parking = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    is_enabled = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     contact = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
