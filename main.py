@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, redirect, request, abort, make_response, jsonify
 from data import db_session
 from data import offices_api
@@ -11,6 +13,8 @@ from forms.office import OfficeForm
 from forms.user import RegisterForm, LoginForm
 
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+
+from funcs import create_dir, delete_dir, get_dir
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pupupu'
@@ -35,46 +39,50 @@ def index():
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def reqister():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password_again.data:
-            return render_template('forms/reg.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message="Пароли не совпадают")
-        db_sess = db_session.create_session()
-        if db_sess.query(User).filter(User.email == form.email.data).first():
-            return render_template('forms/reg.html',
-                                   title='Регистрация',
-                                   form=form,
-                                   message="Такой пользователь уже есть")
-        user = User(
-            name=form.name.data,
-            email=form.email.data,
-            role=form.role.data
-        )
-        user.set_password(form.password.data)
-        db_sess.add(user)
-        db_sess.commit()
-        return redirect('/login')
-    return render_template('forms/reg.html',
-                           title='Регистрация',
-                           form=form)
+def register():
+    if not current_user.is_authenticated:
+        form = RegisterForm()
+        if form.validate_on_submit():
+            if form.password.data != form.password_again.data:
+                return render_template('forms/reg.html',
+                                       title='Регистрация',
+                                       form=form,
+                                       message="Пароли не совпадают")
+            db_sess = db_session.create_session()
+            if db_sess.query(User).filter(User.email == form.email.data).first():
+                return render_template('forms/reg.html',
+                                       title='Регистрация',
+                                       form=form,
+                                       message="Такой пользователь уже есть")
+            user = User(
+                name=form.name.data,
+                email=form.email.data,
+                role=form.role.data
+            )
+            user.set_password(form.password.data)
+            db_sess.add(user)
+            db_sess.commit()
+            return redirect('/login')
+        return render_template('forms/reg.html',
+                               title='Регистрация',
+                               form=form)
+    return redirect("/")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect("/")
-        return render_template('forms/auth.html',
-                               message="Неправильный логин или пароль",
-                               form=form)
-    return render_template('forms/auth.html', title='Авторизация', form=form)
+    if not current_user.is_authenticated:
+        form = LoginForm()
+        if form.validate_on_submit():
+            db_sess = db_session.create_session()
+            user = db_sess.query(User).filter(User.email == form.email.data).first()
+            if user and user.check_password(form.password.data):
+                login_user(user)
+                return redirect("/")
+            return render_template('forms/auth.html',
+                                   message="Неправильный логин или пароль",
+                                   form=form)
+        return render_template('forms/auth.html', title='Авторизация', form=form)
+    return redirect("/")
 
 
 @app.route('/logout')
@@ -86,10 +94,15 @@ def logout():
 @app.route('/add_business_center',  methods=['GET', 'POST'])
 @login_required
 def add_business_center():
-    print(f"Запрос на cоздание бизнес-центра")
     form = Business_centerForm()
     if form.validate_on_submit():
+        print(f"Запрос на cоздание бизнес-центра")
         db_sess = db_session.create_session()
+        if db_sess.query(Business_center).filter(Business_center.name == form.name.data).first():
+            return render_template('forms/business_center.html',
+                                   title='Добавление бизнес-центра',
+                                   form=form,
+                                   message="Такое название бизнес-центра уже есть")
         bc = Business_center()
         bc.name = form.name.data
         bc.address = form.address.data
@@ -102,14 +115,27 @@ def add_business_center():
         bc.lift = form.lift.data
         bc.parking = form.parking.data
         bc.contact = form.contact.data
+        file = form.photo.data
+        bc.photo = form.photo.data.filename
+
         current_user.business_centers.append(bc)
         db_sess.merge(current_user)
         db_sess.commit()
+
+        bc = db_sess.query(Business_center).filter(Business_center.name == bc.name).first()
+        if bc:
+            dir_name = str(bc.id)
+            print(f"Создаем директорию")
+            path_dir = create_dir(dir_name)
+            print(f"Создана директория {path_dir}")
+        if file and path_dir:
+            file_path = os.path.join(path_dir, file.filename)
+            file.save(file_path)
+
         return redirect('/')
     return render_template('forms/business_center.html',
                            title='Добавление бизнес-центра',
                            form=form)
-
 
 @app.route('/edit_business_center/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -120,7 +146,6 @@ def edit_business_center(id):
         db_sess = db_session.create_session()
         bc = db_sess.query(Business_center).filter(Business_center.id == id,
                                                    Business_center.user == current_user).first()
-        print(bc)
         if bc:
             form.name.data = bc.name
             form.address.data = bc.address
@@ -133,6 +158,7 @@ def edit_business_center(id):
             form.lift.data = bc.lift
             form.parking.data = bc.parking
             form.contact.data = bc.contact
+            #form.photo.data = bc.photo
         else:
             abort(404)
     if form.validate_on_submit():
@@ -140,6 +166,12 @@ def edit_business_center(id):
         bc = db_sess.query(Business_center).filter(Business_center.id == id,
                                                    Business_center.user == current_user).first()
         if bc:
+            if db_sess.query(Business_center).filter(Business_center.name == form.name.data,
+                                                     Business_center.id != id).first():
+                return render_template('forms/business_center.html',
+                                       title='Редактирование характеристик бизнес-центра',
+                                       form=form,
+                                       message="Такое название бизнес-центра уже есть")
             bc.name = form.name.data
             bc.address = form.address.data
             bc.building = form.building.data
@@ -150,6 +182,19 @@ def edit_business_center(id):
             bc.floors = form.floors.data
             bc.lift = form.lift.data
             bc.parking = form.parking.data
+            bc.contact = form.contact.data
+            if form.photo.data.filename:
+                print(f"было: {bc.photo}, стало: {form.photo.data.filename}")
+                file = form.photo.data
+                dir_name = str(bc.id)
+                path_dir = get_dir(dir_name)
+                if file and path_dir:
+                    file_path = os.path.join(path_dir, file.filename)
+                    file.save(file_path)
+                    bc.photo = form.photo.data.filename
+                else:
+                    print("Не удалось загрузить изображение")
+
             db_sess.commit()
             return redirect('/')
         else:
@@ -167,12 +212,15 @@ def del_business_center(id):
     bc = db_sess.query(Business_center).filter(Business_center.id == id,
                                                Business_center.user == current_user).first()
     if bc:
-        print(bc)
-        ofs = db_sess.query(Office).filter(Office.business_center_id == id).all()
-        for of in ofs:
-            db_sess.delete(of)
-        db_sess.delete(bc)
-        db_sess.commit()
+        dir_name = str(bc.id)
+        if delete_dir(dir_name):
+            ofs = db_sess.query(Office).filter(Office.business_center_id == id).all()
+            for of in ofs:
+                db_sess.delete(of)
+            db_sess.delete(bc)
+            db_sess.commit()
+        else:
+            print("Не удалось выполнить удаление директории")
     else:
         abort(404)
     return redirect('/')
@@ -192,9 +240,9 @@ def card_business_center(id):
 @app.route('/bc<int:bc_id>/add_office',  methods=['GET', 'POST'])
 @login_required
 def add_office(bc_id):
-    print(f"Запрос на cоздание офиса")
     form = OfficeForm()
     if form.validate_on_submit():
+        print(f"Запрос на cоздание офиса")
         db_sess = db_session.create_session()
         of = Office()
         of.area = form.area.data
@@ -255,8 +303,7 @@ def del_office(id):
     of = db_sess.query(Office).filter(Office.id == id,
                                       Office.user == current_user).first()
     if of:
-        print(of)
-        #db_sess.delete(of)
+        db_sess.delete(of)
         db_sess.commit()
     else:
         abort(404)
@@ -270,7 +317,8 @@ def card_office(id):
     return render_template("cards/office.html",
                            current_user=current_user,
                            title="Характеристики офиса",
-                           office=office)
+                           office=office,
+                           business_center = office.business_center)
 
 
 @app.errorhandler(404)
@@ -283,7 +331,7 @@ def bad_request(_):
     return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 def main():
-    db_session.global_init("db/blogs.db")
+    db_session.global_init("db/database.db")
     app.register_blueprint(offices_api.blueprint)
     app.run()
 

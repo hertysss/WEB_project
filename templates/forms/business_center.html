@@ -7,8 +7,16 @@
 		<p class="text-center h5 text-uppercase"><b>{{ title }}</b></p>
 	</div>
 
-	<form action="" method="post">
+	<form action="" method="post" enctype="multipart/form-data">
 	    {{ form.hidden_tag() }}
+
+	    {% if message %}
+			<div class="alert alert-warning" role="alert">
+				{{message}}
+			</div>
+		{% endif %}
+
+	    
 	    <p>
 	        {{ form.name.label }}<br>
 	        {{ form.name(class="form-control") }}<br>
@@ -107,9 +115,18 @@
 	                {{ error }}
 	            </p>
 	        {% endfor %}
-	    </p>    
+	    </p>
+	    <p>
+	        {{ form.photo.label }}<br>
+	        {{ form.photo(class="form-control") }}<br>
+	        {% for error in form.photo.errors %}
+	            <p content="alert alert-danger" role="alert">
+	                {{ error }}
+	            </p>
+	        {% endfor %}
+	    </p>      
 	    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-	    {{message}}
+
 	</form>
 </div>
 

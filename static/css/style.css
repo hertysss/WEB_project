@@ -2,11 +2,11 @@
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
-
+      
   }
 
 body, html {
-    width: 100%;
+    width: 100%; 
 }
 
 .content{

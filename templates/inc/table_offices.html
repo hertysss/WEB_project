@@ -12,7 +12,8 @@
 				<td colspan="2">Офисы({{ business_center.offices|length }})</td>
 				<td>Площадь, м2</td>
 				<td>Этаж</td>
-				<td>Ставка, руб за м2/год</td>				
+				<td>Ставка, руб за м2/год</td>
+				<td>Статус</td>					
 			</tr>
 		</thead>
 
@@ -24,7 +25,12 @@
 			<td colspan="2">лот№ {{ office.id }}</td>
 			<td >{{ office.area }}</td>
 			<td>{{ office.floor }}</td>
-			<td>{{ office.bet }}</td>				
+			<td>{{ office.bet }}</td>
+			{% if office.status == "свободен" %}	
+				<td ><span class="badge bg-success">{{ office.status }}</span></td>
+			{% elif office.status == "сдан"%}
+				<td><span class="badge bg-danger">{{ office.status }}</span></td>
+			{% endif %}			
 		</tr>
 	</tbody>
 

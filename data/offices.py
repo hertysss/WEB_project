@@ -9,9 +9,9 @@ class Office(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'offices'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    area = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    floor = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    bet = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    area = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    floor = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+    bet = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
